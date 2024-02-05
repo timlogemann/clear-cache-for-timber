@@ -5,7 +5,7 @@ Plugin URI: https://github.com/ogrosko/timber-clear-cache
 Description: Clear cache for Timber and Twig caching
 Author: Ondrej Grosko
 Version: 0.2.0
-Author URI: 
+Author URI:
 Network: True
 Text Domain: clear-cache-for-timber
 */
@@ -16,7 +16,7 @@ Text Domain: clear-cache-for-timber
 add_action( 'init', 'clear_cache_for_timber_init' );
 function clear_cache_for_timber_init() {
 
-    if ( !is_super_admin() || !is_admin_bar_showing() || !class_exists('Timber') || !\Timber::$cache ) { 
+    if ( !is_super_admin() || !is_admin_bar_showing() || !class_exists('Timber') || !\Timber::$cache ) {
           return;
     }
 
@@ -37,15 +37,27 @@ function clear_cache_for_timber_init() {
 add_action('admin_bar_menu', 'add_timber_clear_cache_admin_button', 110);
 function add_timber_clear_cache_admin_button() {
     global $wp_admin_bar;
-   
+
     $wp_admin_bar->add_menu(array(
-        'id' => 'clear-timber-cache',
-        'title' => __( 'Clear Timber Cache'),
-        'href' => admin_url('admin-ajax.php'),
-        'meta' => array(
-            'html' => '<img src="'.plugins_url('assets/images/loader.svg', __FILE__).'" class="loader" alt="clear timber cache loader" />',
-            'onclick' => 'clear_timber_cache(jQuery(this)); return false;'
-        )
+      'id' => 'clear-timber-cache',
+      'title' => __( 'Clear Timber Cache'),
+      'href' => admin_url('admin-ajax.php'),
+      'meta' => array(
+        'class' => 'clear-cache-for-timber-item',
+        'html' => '<img src="'.plugins_url('assets/images/loader.svg', __FILE__).'" class="loader" alt="clear timber cache loader" />',
+        'onclick' => 'clear_timber_cache(jQuery(this)); return false;'
+      )
+    ));
+
+    $wp_admin_bar->add_menu(array(
+      'id' => 'clear-twig-cache',
+      'title' => __( 'Clear Twig Cache'),
+      'href' => admin_url('admin-ajax.php'),
+      'meta' => array(
+        'class' => 'clear-cache-for-timber-item',
+        'html' => '<img src="'.plugins_url('assets/images/loader.svg', __FILE__).'" class="loader" alt="clear twig cache loader" />',
+        'onclick' => 'clear_twig_cache(jQuery(this)); return false;'
+      )
     ));
 }
 
@@ -58,19 +70,23 @@ function clear_timber_cache_callback() {
     wp_die();
 }
 
+add_action( 'wp_ajax_clear_twig_cache_action', 'clear_twig_cache_callback' );
+function clear_twig_cache_callback() {
+    echo clear_cache_for_twig_clear_cache();
+    wp_die();
+}
+
 /**
  * Timber Clear cache function
  */
 function clear_cache_for_timber_clear_cache() {
-    if (class_exists('Timber\Cache\Cleaner')) {
-        return Timber\Cache\Cleaner::clear_cache_twig();
-    }
-    else if (class_exists('Timber\\Integrations\\Command')) {
-        return \Timber\Integrations\Command::clear_cache();
-    }
-    else {
-        return TimberCommand::clear_cache();
-    }
+    $loader = new Timber\Loader();
+    return $loader->clear_cache_timber();
+}
+
+function clear_cache_for_twig_clear_cache() {
+    $loader = new Timber\Loader();
+    return $loader->clear_cache_twig();
 }
 
 /**
@@ -78,7 +94,7 @@ function clear_cache_for_timber_clear_cache() {
  */
 add_action( 'admin_enqueue_scripts', 'clear_timer_cache_javascript' );
 add_action( 'admin_bar_init', 'clear_timer_cache_javascript' );
-function clear_timer_cache_javascript() { 
+function clear_timer_cache_javascript() {
     wp_enqueue_script('clear-cache-for-timber-javascript', plugins_url('assets/js/main.js', __FILE__), array(), '0.1.0', true);
     wp_enqueue_style( 'clear-cache-for-timber-style',  plugins_url('assets/css/style.css', __FILE__), array(), '0.1.0' );
 }
