@@ -62,7 +62,13 @@ function clear_timber_cache_callback() {
  * Timber Clear cache function
  */
 function clear_cache_for_timber_clear_cache() {
-    if (class_exists('Timber\Cache\Cleaner')) {
+    if (class_exists('Timber\Loader')) {
+        $loader = new Timber\Loader();
+        $loader->clear_cache_twig();
+        return $loader->clear_cache_timber();
+        // return Timber\Cache\Cleaner::clear_cache_twig();
+    }
+    else if (class_exists('Timber\Cache\Cleaner')) {
         return Timber\Cache\Cleaner::clear_cache_twig();
     }
     else if (class_exists('Timber\\Integrations\\Command')) {
