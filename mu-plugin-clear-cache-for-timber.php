@@ -44,7 +44,7 @@ function add_timber_clear_cache_admin_button() {
       'href' => admin_url('admin-ajax.php'),
       'meta' => array(
         'class' => 'clear-cache-for-timber-item',
-        'html' => '<img src="'.plugins_url('assets/images/loader.svg', __FILE__).'" class="loader" alt="clear timber cache loader" />',
+        'html' => '<img src="'. WPMU_PLUGIN_URL .'/clear-cache-for-timber/assets/images/loader.svg' . '" class="loader" alt="clear timber cache loader" />',
         'onclick' => 'clear_timber_cache(jQuery(this)); return false;'
       )
     ));
@@ -55,7 +55,7 @@ function add_timber_clear_cache_admin_button() {
       'href' => admin_url('admin-ajax.php'),
       'meta' => array(
         'class' => 'clear-cache-for-timber-item',
-        'html' => '<img src="'.plugins_url('assets/images/loader.svg', __FILE__).'" class="loader" alt="clear twig cache loader" />',
+        'html' => '<img src="'. WPMU_PLUGIN_URL .'/clear-cache-for-timber/assets/images/loader.svg' . '" class="loader" alt="clear timber cache loader" />',
         'onclick' => 'clear_twig_cache(jQuery(this)); return false;'
       )
     ));
@@ -95,8 +95,8 @@ function clear_cache_for_twig_clear_cache() {
 add_action( 'admin_enqueue_scripts', 'clear_timer_cache_javascript' );
 add_action( 'admin_bar_init', 'clear_timer_cache_javascript' );
 function clear_timer_cache_javascript() {
-    wp_enqueue_script('clear-cache-for-timber-javascript', plugins_url('assets/js/main.js', __FILE__), array(), '0.1.0', true);
-    wp_enqueue_style( 'clear-cache-for-timber-style',  plugins_url('assets/css/style.css', __FILE__), array(), '0.1.0' );
+    wp_enqueue_script('clear-cache-for-timber-javascript', WPMU_PLUGIN_URL . '/clear-cache-for-timber/assets/js/main.js', array(), '1.0.0', true);
+    wp_enqueue_style( 'clear-cache-for-timber-style',  WPMU_PLUGIN_URL . '/clear-cache-for-timber/assets/css/style.css', array(), '1.0.0' );
 }
 
 
